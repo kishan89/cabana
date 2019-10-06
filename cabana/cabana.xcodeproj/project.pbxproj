@@ -11,6 +11,9 @@
 		3B0E8745B09191BE32ACA940 /* Pods_cabanaTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 506FE8989C97B669F9C20E5C /* Pods_cabanaTests.framework */; };
 		5185AF27B329E3CACEC07626 /* Pods_cabana.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26D790E748397008FD696C63 /* Pods_cabana.framework */; };
 		A646B78123412C33009E7B5C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A646B78023412C33009E7B5C /* GoogleService-Info.plist */; };
+		A68AEB33234A554200B91E04 /* DbUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A68AEB32234A554200B91E04 /* DbUtils.swift */; };
+		A68AEB35234A77D700B91E04 /* DbObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = A68AEB34234A77D700B91E04 /* DbObjects.swift */; };
+		A68AEB37234A782100B91E04 /* RoomsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A68AEB36234A782100B91E04 /* RoomsView.swift */; };
 		A6D7947F2345888A0045B5E5 /* FbLoginButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6D7947E2345888A0045B5E5 /* FbLoginButton.swift */; };
 		A6EE0BA423411FDF008E3BC1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6EE0BA323411FDF008E3BC1 /* AppDelegate.swift */; };
 		A6EE0BA623411FDF008E3BC1 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6EE0BA523411FDF008E3BC1 /* SceneDelegate.swift */; };
@@ -47,6 +50,9 @@
 		A1C0E2D245301B14B992122D /* Pods-cabanaUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-cabanaUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-cabanaUITests/Pods-cabanaUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		A6042EDA23413A47009A1E87 /* cabana.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = cabana.entitlements; sourceTree = "<group>"; };
 		A646B78023412C33009E7B5C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		A68AEB32234A554200B91E04 /* DbUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DbUtils.swift; sourceTree = "<group>"; };
+		A68AEB34234A77D700B91E04 /* DbObjects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DbObjects.swift; sourceTree = "<group>"; };
+		A68AEB36234A782100B91E04 /* RoomsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomsView.swift; sourceTree = "<group>"; };
 		A6D7947E2345888A0045B5E5 /* FbLoginButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FbLoginButton.swift; sourceTree = "<group>"; };
 		A6EE0BA023411FDF008E3BC1 /* cabana.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = cabana.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6EE0BA323411FDF008E3BC1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -125,6 +131,7 @@
 			children = (
 				A6EE0BA723411FDF008E3BC1 /* ContentView.swift */,
 				A6D7947E2345888A0045B5E5 /* FbLoginButton.swift */,
+				A68AEB36234A782100B91E04 /* RoomsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -164,6 +171,8 @@
 				A6EE0BB123411FE1008E3BC1 /* Info.plist */,
 				A6EE0BAB23411FE1008E3BC1 /* Preview Content */,
 				A6F18D7D23416F74001AEDDE /* cabana-Bridging-Header.h */,
+				A68AEB32234A554200B91E04 /* DbUtils.swift */,
+				A68AEB34234A77D700B91E04 /* DbObjects.swift */,
 			);
 			path = cabana;
 			sourceTree = "<group>";
@@ -403,24 +412,34 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-cabana/Pods-cabana-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/BoringSSL-GRPC/openssl_grpc.framework",
 				"${BUILT_PRODUCTS_DIR}/FBSDKCoreKit/FBSDKCoreKit.framework",
 				"${BUILT_PRODUCTS_DIR}/FBSDKLoginKit/FBSDKLoginKit.framework",
 				"${BUILT_PRODUCTS_DIR}/FacebookCore/FacebookCore.framework",
 				"${BUILT_PRODUCTS_DIR}/FacebookLogin/FacebookLogin.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
+				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC-C++/grpcpp.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC-Core/grpc.framework",
+				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/openssl_grpc.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKCoreKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKLoginKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FacebookCore.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FacebookLogin.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/grpcpp.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/grpc.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -459,8 +478,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A68AEB35234A77D700B91E04 /* DbObjects.swift in Sources */,
 				A6EE0BA423411FDF008E3BC1 /* AppDelegate.swift in Sources */,
 				A6EE0BA623411FDF008E3BC1 /* SceneDelegate.swift in Sources */,
+				A68AEB33234A554200B91E04 /* DbUtils.swift in Sources */,
+				A68AEB37234A782100B91E04 /* RoomsView.swift in Sources */,
 				A6EE0BA823411FDF008E3BC1 /* ContentView.swift in Sources */,
 				A6D7947F2345888A0045B5E5 /* FbLoginButton.swift in Sources */,
 			);

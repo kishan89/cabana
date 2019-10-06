@@ -12,12 +12,19 @@ import FacebookLogin
 struct ContentView: View {
     var totalClicked = 0
     var body: some View {
+        RoomsView()
+    }
+}
+
+struct LoginView: View {
+    var body: some View {
         VStack() {
             Text("Hello Kishan")
             Text("Subtitle")
                     .font(.subheadline)
             LoginButton()
                 .frame(width: 180, height: 30, alignment: .center)
+            Button(action: { print("clicked") }, label: { Text("Click to view lobby") })
         }
     }
 }

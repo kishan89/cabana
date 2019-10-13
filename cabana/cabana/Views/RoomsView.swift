@@ -16,28 +16,25 @@ struct RoomsView: View {
     }
     var body: some View {
         VStack(alignment: .leading) {
-            Text("Your Rooms")
-                .bold()
-                .font(.largeTitle)
-                .padding()
             List(roomsViewModel.rooms) { room in
-               RoomView(room: room)
+               RoomListItem(room: room)
             }
         }
     }
 }
 
-struct RoomView: View {
+struct RoomListItem: View {
     var room: Room
     init(room: Room) {
         self.room = room
     }
     var body: some View {
         VStack {
-            Text(room.name!)
+            NavigationLink(destination: RoomView(room: room)) {
+                Text(room.name)
+            }
         }
     }
-
 }
 
 public class RoomsViewModel: ObservableObject {
@@ -49,7 +46,7 @@ public class RoomsViewModel: ObservableObject {
         }
     }
     func load() {
-        DbUtils.getRooms() { rooms in
+        roomService.getRooms(userId: "2oNfwEFXqzCHe2dJ3vFG") { rooms in
             self.rooms = rooms
         }
     }

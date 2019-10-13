@@ -12,7 +12,11 @@ import FacebookLogin
 struct ContentView: View {
     var totalClicked = 0
     var body: some View {
-        RoomsView()
+        NavigationView {
+            RoomsView()
+            .navigationBarTitle(Text("Your rooms"))
+        }
+    
     }
 }
 

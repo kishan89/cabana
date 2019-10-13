@@ -12,7 +12,6 @@ import Firebase
 class DbUtils {
     static func addUsers() {
         let db = Firestore.firestore()
-        // Add a new document with a generated ID
         var ref: DocumentReference? = nil
         for _ in 0..<15 {
             ref = db.collection("users").addDocument(data: [
@@ -62,7 +61,7 @@ class DbUtils {
             }
         }
     }
-    
+        
     static func randomString(length: Int) -> String {
       let letters = "abcdefghijklmnopqrstuvwxyz"
       return String((0..<length).map{ _ in letters.randomElement()! })

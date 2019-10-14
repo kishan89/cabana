@@ -32,8 +32,8 @@ class ResponseService {
         }
     }
     
-    func listenForResponseChanges(roomId: String, update: @escaping(_ responses: [Response]) -> Void) {
-        db.collection("room/\(roomId)/response")
+    func listenForResponseChanges(roomId: String, update: @escaping(_ responses: [Response]) -> ()) -> (ListenerRegistration?) {
+        let listener = db.collection("room/\(roomId)/response")
         .addSnapshotListener { querySnapshot, error in
             guard let documents = querySnapshot?.documents else {
                 print("Error fetching response documents: \(error!)")
@@ -46,5 +46,6 @@ class ResponseService {
             }
             update(responses)
         }
+        return (listener)
     }
 }

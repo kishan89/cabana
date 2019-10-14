@@ -27,6 +27,9 @@ struct RoomView: View {
             // TODO: unregister listener when view is destroyed
             self.roomViewModel.load()
         }
+        .onDisappear {
+             self.roomViewModel.removeListener()
+        }
     }
 }
 
@@ -44,6 +47,8 @@ struct ResponseView: View {
 
 public class RoomViewModel: ObservableObject {
     public let objectWillChange = PassthroughSubject<RoomViewModel, Never>()
+    var listener: ListenerRegistration?
+    
     var responses: [Response] = [Response]() {
         didSet {
             objectWillChange.send(self)
@@ -51,9 +56,16 @@ public class RoomViewModel: ObservableObject {
     }
     func load() {
         print("load")
-        responseService.listenForResponseChanges(roomId: "9NrgXvSuh11xycZcSvAN") { responses in
+        self.listener = responseService.listenForResponseChanges(roomId: "9NrgXvSuh11xycZcSvAN") { responses in
             print("responses have changed")
             self.responses = responses
+        }
+    }
+    
+    func removeListener() {
+        if self.listener != nil {
+            print("destroying listener")
+            self.listener!.remove()
         }
     }
 }

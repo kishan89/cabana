@@ -11,6 +11,7 @@ import Combine
 
 struct RoomsView: View {
     @ObservedObject var roomsViewModel = RoomsViewModel()
+    @State private var newResponse: String = ""
     init() {
         self.roomsViewModel.load()
     }

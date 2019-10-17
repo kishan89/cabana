@@ -33,6 +33,7 @@ class ResponseService {
     }
     
     func listenForResponseChanges(roomId: String, update: @escaping(_ responses: [Response]) -> ()) -> (ListenerRegistration?) {
+        //TODO: order by timestamp
         let listener = db.collection("room/\(roomId)/response")
         .addSnapshotListener { querySnapshot, error in
             guard let documents = querySnapshot?.documents else {
@@ -47,5 +48,17 @@ class ResponseService {
             update(responses)
         }
         return (listener)
+    }
+    
+    func addResponse(roomId: String, text: String) {
+        db.collection("room/9NrgXvSuh11xycZcSvAN/response").document().setData([
+            "text": text,
+        ]) { err in
+            if let err = err {
+                print("Error saving new response: \(err)")
+            } else {
+                print("New response successfully saved")
+            }
+        }
     }
 }

@@ -13,8 +13,11 @@
 		A646B78123412C33009E7B5C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A646B78023412C33009E7B5C /* GoogleService-Info.plist */; };
 		A6582D0223522ADA00B7487C /* RoomService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6582D0123522ADA00B7487C /* RoomService.swift */; };
 		A661560423529D3C00FD061F /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = A661560323529D3C00FD061F /* Response.swift */; };
+		A6897BCA23540A4E0080A729 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6897BC923540A4E0080A729 /* Colors.swift */; };
 		A68AEB33234A554200B91E04 /* DbUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A68AEB32234A554200B91E04 /* DbUtils.swift */; };
 		A68AEB37234A782100B91E04 /* RoomsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A68AEB36234A782100B91E04 /* RoomsView.swift */; };
+		A6D25EED23569BAA00EB1998 /* NewResponseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6D25EEC23569BAA00EB1998 /* NewResponseView.swift */; };
+		A6D25EEF2356A47900EB1998 /* ResponseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6D25EEE2356A47900EB1998 /* ResponseView.swift */; };
 		A6D7947F2345888A0045B5E5 /* FbLoginButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6D7947E2345888A0045B5E5 /* FbLoginButton.swift */; };
 		A6EE0BA423411FDF008E3BC1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6EE0BA323411FDF008E3BC1 /* AppDelegate.swift */; };
 		A6EE0BA623411FDF008E3BC1 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6EE0BA523411FDF008E3BC1 /* SceneDelegate.swift */; };
@@ -56,8 +59,11 @@
 		A646B78023412C33009E7B5C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A6582D0123522ADA00B7487C /* RoomService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomService.swift; sourceTree = "<group>"; };
 		A661560323529D3C00FD061F /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
+		A6897BC923540A4E0080A729 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		A68AEB32234A554200B91E04 /* DbUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DbUtils.swift; sourceTree = "<group>"; };
 		A68AEB36234A782100B91E04 /* RoomsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomsView.swift; sourceTree = "<group>"; };
+		A6D25EEC23569BAA00EB1998 /* NewResponseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewResponseView.swift; sourceTree = "<group>"; };
+		A6D25EEE2356A47900EB1998 /* ResponseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseView.swift; sourceTree = "<group>"; };
 		A6D7947E2345888A0045B5E5 /* FbLoginButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FbLoginButton.swift; sourceTree = "<group>"; };
 		A6EE0BA023411FDF008E3BC1 /* cabana.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = cabana.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6EE0BA323411FDF008E3BC1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -152,6 +158,14 @@
 			path = Domain;
 			sourceTree = "<group>";
 		};
+		A6897BC823540A350080A729 /* Style */ = {
+			isa = PBXGroup;
+			children = (
+				A6897BC923540A4E0080A729 /* Colors.swift */,
+			);
+			path = Style;
+			sourceTree = "<group>";
+		};
 		A6D7948023458C290045B5E5 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -159,6 +173,8 @@
 				A6D7947E2345888A0045B5E5 /* FbLoginButton.swift */,
 				A68AEB36234A782100B91E04 /* RoomsView.swift */,
 				A6FA19A22352900700E92636 /* RoomView.swift */,
+				A6D25EEC23569BAA00EB1998 /* NewResponseView.swift */,
+				A6D25EEE2356A47900EB1998 /* ResponseView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -188,6 +204,7 @@
 		A6EE0BA223411FDF008E3BC1 /* cabana */ = {
 			isa = PBXGroup;
 			children = (
+				A6897BC823540A350080A729 /* Style */,
 				A6582D0423522D5400B7487C /* Domain */,
 				A6582D0323522D3600B7487C /* Services */,
 				A6D7948023458C290045B5E5 /* Views */,
@@ -507,11 +524,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				A6FA19A32352900700E92636 /* RoomView.swift in Sources */,
+				A6D25EEF2356A47900EB1998 /* ResponseView.swift in Sources */,
+				A6897BCA23540A4E0080A729 /* Colors.swift in Sources */,
 				A6EE0BA423411FDF008E3BC1 /* AppDelegate.swift in Sources */,
 				A6582D0223522ADA00B7487C /* RoomService.swift in Sources */,
 				A6EE0BA623411FDF008E3BC1 /* SceneDelegate.swift in Sources */,
 				A6FA19A7235293AA00E92636 /* ResponseService.swift in Sources */,
 				A6FA19A5235292C900E92636 /* Room.swift in Sources */,
+				A6D25EED23569BAA00EB1998 /* NewResponseView.swift in Sources */,
 				A68AEB33234A554200B91E04 /* DbUtils.swift in Sources */,
 				A661560423529D3C00FD061F /* Response.swift in Sources */,
 				A68AEB37234A782100B91E04 /* RoomsView.swift in Sources */,

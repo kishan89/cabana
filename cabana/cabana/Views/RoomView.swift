@@ -24,12 +24,13 @@ struct RoomView: View {
         VStack {
             HStack {
                 ForEach(self.roomViewModel.users) { user in
-                    Text("\(user.id)")
+                    Image("pancake").resizable()
+                    .clipShape(Circle())
+                        .overlay(Circle().stroke(Colors.light, lineWidth: 3))
+                        .frame(width: 60, height: 60, alignment: .leading)
+                    .padding()
                 }
             }
-            // TODO: add user icons?
-            //Image("test")
-            //.frame(width: 50, height: 50, alignment: .leading)
             //TODO: add prompt
             Text("n/a")
                 .padding()

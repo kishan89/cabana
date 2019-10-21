@@ -10,11 +10,25 @@ import SwiftUI
 import FacebookLogin
 
 struct ContentView: View {
-    var totalClicked = 0
+    @State private var showPopover: Bool = false
+    init() {
+        print(showPopover)
+    }
     var body: some View {
         NavigationView {
             RoomsView()
-            .navigationBarTitle(Text("Your rooms"))
+            .navigationBarTitle(Text("your rooms"))
+            .navigationBarItems(trailing: Button(action: {
+                self.showPopover = true
+            }, label: {
+                Text("new").font(.custom("SF Pro Display", size: 24))
+            })
+            .padding()
+            .foregroundColor(Colors.active))
+            // TODO: fix popover, doesn't work when pressed a second time
+            .popover(isPresented: self.$showPopover, arrowEdge: .bottom) {
+                NewRoomView(showPopover: self.$showPopover)
+            }
         }
     
     }

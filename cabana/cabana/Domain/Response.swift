@@ -7,10 +7,20 @@
 //
 
 struct Response: Codable, Identifiable {
-    var id: String
+    var id: String?
     var text: String?
-    init(id: String, data:NSDictionary) {
+    init(id: String, data: NSDictionary) {
         self.id = id
         self.text = data["text"] as? String
+    }
+    init(data: NSDictionary) {
+        self.text = data["text"] as? String
+    }
+    func toDict() -> [String : Any] {
+        return [
+            //TODO: fix so that we only send non-null values to the firestore
+            //"id": id,
+            "text": text
+        ]
     }
 }

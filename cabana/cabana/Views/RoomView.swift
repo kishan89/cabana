@@ -9,11 +9,12 @@
 import SwiftUI
 import Combine
 import Firebase
+import os
 
 struct RoomView: View {
     var room: Room
-    @ObservedObject var roomViewModel = RoomViewModel()
     
+    @ObservedObject var roomViewModel = RoomViewModel()
     @State private var showPopover: Bool = false
     
     init(room: Room) {
@@ -21,6 +22,17 @@ struct RoomView: View {
     }
     var body: some View {
         VStack {
+            HStack {
+                ForEach(self.roomViewModel.users) { user in
+                    Text("\(user.id)")
+                }
+            }
+            // TODO: add user icons?
+            //Image("test")
+            //.frame(width: 50, height: 50, alignment: .leading)
+            //TODO: add prompt
+            Text("n/a")
+                .padding()
             List(roomViewModel.responses) { response in
                 ResponseView(response: response)
             }
@@ -38,31 +50,50 @@ struct RoomView: View {
             self.roomViewModel.load()
         }
         .onDisappear {
-             self.roomViewModel.removeListener()
+             self.roomViewModel.removeListeners()
         }
     }
 }
 
 public class RoomViewModel: ObservableObject {
+    //var room: Room
+    //init(room: Room) {
+    //    self.room = room
+    //}
     public let objectWillChange = PassthroughSubject<RoomViewModel, Never>()
-    var listener: ListenerRegistration?
-    
+    var responseListener: ListenerRegistration?
     var responses: [Response] = [Response]() {
         didSet {
             objectWillChange.send(self)
         }
     }
-    func load() {
-        print("load")
-        self.listener = responseService.listenForResponseChanges(roomId: "9NrgXvSuh11xycZcSvAN") { responses in
-            print("responses have changed")
-            self.responses = responses
+    
+    var userListener: ListenerRegistration?
+    var users: [User] = [User]() {
+        didSet {
+            objectWillChange.send(self)
         }
     }
     
-    func removeListener() {
-        if let listener = self.listener {
-            print("destroying listener")
+    func load() {
+        os_log("action='loading responses for room' | roomId='9NrgXvSuh11xycZcSvAN'", log: OSLog.default, type: .info)
+        self.responseListener = responseService.listenForResponseChanges(roomId: "9NrgXvSuh11xycZcSvAN") { responses in
+            print("responses have changed")
+            self.responses = responses
+        }
+        self.userListener = userService.listenForUserChanges(roomId: "9NrgXvSuh11xycZcSvAN") { users in
+            print("users have changed")
+            self.users = users
+        }
+    }
+    
+    func removeListeners() {
+        if let listener = self.responseListener {
+            print("destroying response listener")
+            listener.remove()
+        }
+        if let listener = self.userListener {
+            print("destroying user listener")
             listener.remove()
         }
     }

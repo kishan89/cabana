@@ -7,7 +7,6 @@
 //
 
 import Firebase
-// import Logging
 
 let responseService = ResponseService()
 
@@ -19,7 +18,7 @@ class ResponseService {
     
     func getResponses(roomId: String, completion: @escaping(_ responses: [Response]) -> Void) {
         var responses = [Response]()
-        db.collection("room/\(roomId)/response").getDocuments() { (querySnapshot, err) in
+        db.collection("room/\(roomId)/prompt/iJK3A4z3FB7iYRDlTHmH/response").getDocuments() { (querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")
             } else {
@@ -34,7 +33,7 @@ class ResponseService {
     
     func listenForResponseChanges(roomId: String, update: @escaping(_ responses: [Response]) -> ()) -> (ListenerRegistration?) {
         //TODO: order by timestamp
-        let listener = db.collection("room/\(roomId)/response")
+        let listener = db.collection("room/\(roomId)/prompt/iJK3A4z3FB7iYRDlTHmH/response")
         .addSnapshotListener { querySnapshot, error in
             guard let documents = querySnapshot?.documents else {
                 print("Error fetching response documents: \(error!)")
@@ -50,10 +49,8 @@ class ResponseService {
         return (listener)
     }
     
-    func addResponse(roomId: String, text: String) {
-        db.collection("room/9NrgXvSuh11xycZcSvAN/response").document().setData([
-            "text": text,
-        ]) { err in
+    func addResponse(roomId: String, response: Response) {
+        db.collection("room/9NrgXvSuh11xycZcSvAN/response").document().setData(response.toDict()) { err in
             if let err = err {
                 print("Error saving new response: \(err)")
             } else {

@@ -18,7 +18,10 @@ struct NewResponseView: View {
             HStack {
                 Spacer()
                 Button(action: {
-                    responseService.addResponse(roomId: "9NrgXvSuh11xycZcSvAN", text: self.newResponse)
+                    let response: Response = Response(data: [
+                        "text": self.newResponse
+                    ])
+                    responseService.addResponse(roomId: "9NrgXvSuh11xycZcSvAN", response: response)
                     self.showPopover = false
                 }, label: { Text("Submit") })
                

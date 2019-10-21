@@ -10,18 +10,18 @@ target 'cabana' do
   # add the Firebase pods
   pod 'Firebase/Analytics'
   pod 'Firebase/Auth'
-  pod 'Firebase/Storage'
-  pod 'Firebase/Database'
-  pod 'Firebase/Core'
+  # pod 'Firebase/Storage'
+  # pod 'Firebase/Database'
+  # pod 'Firebase/Core'
   pod 'Firebase/Firestore'
   
-  pod 'FirebaseUI/Auth'
-  pod 'FirebaseUI/Phone'
+  # pod 'FirebaseUI/Auth'
+  # pod 'FirebaseUI/Phone'
   
   pod 'FacebookLogin'
   pod 'FBSDKLoginKit'
   pod 'FBSDKCoreKit'
-
+  
   target 'cabanaTests' do
     inherit! :search_paths
     # Pods for testing

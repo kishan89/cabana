@@ -13,12 +13,17 @@ struct RoomsView: View {
     @ObservedObject var roomsViewModel = RoomsViewModel()
     @State private var newResponse: String = ""
     init() {
+        UITableView.appearance().separatorColor = .clear
         self.roomsViewModel.load()
     }
     var body: some View {
         VStack(alignment: .leading) {
             List(roomsViewModel.rooms) { room in
                RoomListItem(room: room)
+                // TODO: make width dynamic
+                .frame(width: 300, height: 80, alignment: .center)
+                .background(Colors.dark)
+                .cornerRadius(20)
             }
         }
     }
@@ -30,15 +35,20 @@ struct RoomListItem: View {
         self.room = room
     }
     var body: some View {
-        VStack {
-            NavigationLink(destination: RoomView(room: room)) {
-                Text(room.name)
-            }
+        VStack(alignment: .leading) {
+            Text("\(room.name)")//(UIColor(red: 234, green: 222, blue: 218, alpha: 1))
+                .padding()
+                .foregroundColor(Colors.light)
+            NavigationLink(destination: RoomView(room: room), label: {
+                EmptyView()
+            })
         }
+        
     }
 }
 
 public class RoomsViewModel: ObservableObject {
+    var userId: String = "2oNfwEFXqzCHe2dJ3vFG"
     public let objectWillChange = PassthroughSubject<RoomsViewModel, Never>()
     var rooms: [Room] = [Room]() {
         didSet {
@@ -47,8 +57,20 @@ public class RoomsViewModel: ObservableObject {
         }
     }
     func load() {
-        roomService.getRooms(userId: "2oNfwEFXqzCHe2dJ3vFG") { rooms in
+        roomService.getRooms(userId: userId) { rooms in
             self.rooms = rooms
         }
     }
 }
+
+//struct RoomsView_Previews : PreviewProvider {
+//    static var previews: some View {
+//        RoomsView()
+//    }
+//}
+
+//struct RoomListItem_Previews : PreviewProvider {
+//    static var previews: some View {
+//        RoomListItem(room: Room(id: "1", data: ["name": "name1"]))
+//    }
+//}

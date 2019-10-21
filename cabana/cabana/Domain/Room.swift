@@ -9,8 +9,10 @@
 struct Room: Codable, Identifiable {
     var id: String
     var name: String
+    var userIds: [String]
     init(id: String, data: NSDictionary) {
         self.id = id
         self.name = data["name"] as? String ?? ""
+        self.userIds = data["userIds"] as? [String] ?? []
     }
 }

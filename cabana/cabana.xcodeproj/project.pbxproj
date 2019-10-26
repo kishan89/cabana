@@ -16,6 +16,8 @@
 		A68AEB33234A554200B91E04 /* DbUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A68AEB32234A554200B91E04 /* DbUtils.swift */; };
 		A68AEB37234A782100B91E04 /* RoomsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A68AEB36234A782100B91E04 /* RoomsView.swift */; };
 		A69AE84B0CC2682792012251 /* Pods_cabanaTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E7F799E261AA9820525D5EC /* Pods_cabanaTests.framework */; };
+		A6C8EB362364C78800C08C56 /* PromptService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6C8EB352364C78800C08C56 /* PromptService.swift */; };
+		A6C8EB382364C8B500C08C56 /* Prompt.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6C8EB372364C8B500C08C56 /* Prompt.swift */; };
 		A6D25EED23569BAA00EB1998 /* NewResponseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6D25EEC23569BAA00EB1998 /* NewResponseView.swift */; };
 		A6D25EEF2356A47900EB1998 /* ResponseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6D25EEE2356A47900EB1998 /* ResponseView.swift */; };
 		A6D7947F2345888A0045B5E5 /* FbLoginButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6D7947E2345888A0045B5E5 /* FbLoginButton.swift */; };
@@ -67,6 +69,8 @@
 		A6897BC923540A4E0080A729 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		A68AEB32234A554200B91E04 /* DbUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DbUtils.swift; sourceTree = "<group>"; };
 		A68AEB36234A782100B91E04 /* RoomsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomsView.swift; sourceTree = "<group>"; };
+		A6C8EB352364C78800C08C56 /* PromptService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptService.swift; sourceTree = "<group>"; };
+		A6C8EB372364C8B500C08C56 /* Prompt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Prompt.swift; sourceTree = "<group>"; };
 		A6D25EEC23569BAA00EB1998 /* NewResponseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewResponseView.swift; sourceTree = "<group>"; };
 		A6D25EEE2356A47900EB1998 /* ResponseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseView.swift; sourceTree = "<group>"; };
 		A6D7947E2345888A0045B5E5 /* FbLoginButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FbLoginButton.swift; sourceTree = "<group>"; };
@@ -152,6 +156,7 @@
 				A6582D0123522ADA00B7487C /* RoomService.swift */,
 				A6FA19A6235293AA00E92636 /* ResponseService.swift */,
 				A6DA482C235D29E700E21CE2 /* UserService.swift */,
+				A6C8EB352364C78800C08C56 /* PromptService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -162,6 +167,7 @@
 				A6FA19A4235292C900E92636 /* Room.swift */,
 				A661560323529D3C00FD061F /* Response.swift */,
 				A6DA482A235D28BB00E21CE2 /* User.swift */,
+				A6C8EB372364C8B500C08C56 /* Prompt.swift */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -510,6 +516,8 @@
 				A6FA19A32352900700E92636 /* RoomView.swift in Sources */,
 				A6D25EEF2356A47900EB1998 /* ResponseView.swift in Sources */,
 				A6897BCA23540A4E0080A729 /* Colors.swift in Sources */,
+				A6C8EB362364C78800C08C56 /* PromptService.swift in Sources */,
+				A6C8EB382364C8B500C08C56 /* Prompt.swift in Sources */,
 				A6EE0BA423411FDF008E3BC1 /* AppDelegate.swift in Sources */,
 				A6DA482B235D28BB00E21CE2 /* User.swift in Sources */,
 				A6582D0223522ADA00B7487C /* RoomService.swift in Sources */,

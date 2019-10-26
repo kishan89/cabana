@@ -14,14 +14,17 @@ import os
 struct RoomView: View {
     var room: Room
     
-    @ObservedObject var roomViewModel = RoomViewModel()
+    @ObservedObject var roomViewModel: RoomViewModel
     @State private var showPopover: Bool = false
     
     init(room: Room) {
         self.room = room
+        self.roomViewModel = RoomViewModel(room: room)
+        
     }
+
     var body: some View {
-        VStack {
+        VStack(alignment: .leading) {
             HStack {
                 ForEach(self.roomViewModel.users) { user in
                     Image("pancake").resizable()
@@ -31,19 +34,20 @@ struct RoomView: View {
                     .padding()
                 }
             }
-            //TODO: add prompt
-            Text("n/a")
+            Text(self.roomViewModel.activePrompt?.text ?? "nil")
                 .padding()
             List(roomViewModel.responses) { response in
                 ResponseView(response: response)
             }
+            // TODO: conditionally show '+' button
+            // if self.roomViewModel.activePrompt {
             Button("+") {
                 self.showPopover = true
             }.popover(
                 isPresented: self.$showPopover,
                 arrowEdge: .bottom
             ) {
-                NewResponseView(showPopover: self.$showPopover)
+                NewResponseView(showPopover: self.$showPopover)//, roomId: room.id, promptId: "$promptId")
             }
         }
         .navigationBarTitle(Text("\(room.name)"))
@@ -57,10 +61,15 @@ struct RoomView: View {
 }
 
 public class RoomViewModel: ObservableObject {
-    //var room: Room
-    //init(room: Room) {
-    //    self.room = room
-    //}
+    var room: Room
+    var activePrompt: Prompt? = nil {
+        didSet {
+            objectWillChange.send(self)
+        }
+    }
+    init(room: Room) {
+        self.room = room
+    }
     public let objectWillChange = PassthroughSubject<RoomViewModel, Never>()
     var responseListener: ListenerRegistration?
     var responses: [Response] = [Response]() {
@@ -77,14 +86,18 @@ public class RoomViewModel: ObservableObject {
     }
     
     func load() {
-        os_log("action='loading responses for room' | roomId='9NrgXvSuh11xycZcSvAN'", log: OSLog.default, type: .info)
-        self.responseListener = responseService.listenForResponseChanges(roomId: "9NrgXvSuh11xycZcSvAN") { responses in
+        os_log("action='loading responses for room' | roomId='$roomId'", log: OSLog.default, type: .info)
+        self.responseListener = responseService.listenForResponseChanges(roomId: self.room.id) { responses in
             print("responses have changed")
             self.responses = responses
         }
-        self.userListener = userService.listenForUserChanges(roomId: "9NrgXvSuh11xycZcSvAN") { users in
+        self.userListener = userService.listenForUserChanges(roomId: self.room.id) { users in
             print("users have changed")
             self.users = users
+        }
+        promptService.getActivePromptForRoom(roomId: room.id) { prompt in
+            print("prompt: \(prompt?.text ?? "nil")")
+            self.activePrompt = prompt
         }
     }
     

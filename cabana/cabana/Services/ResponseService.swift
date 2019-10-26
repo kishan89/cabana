@@ -16,6 +16,7 @@ class ResponseService {
         self.db = Firestore.firestore()
     }
     
+    // not used
     func getResponses(roomId: String, completion: @escaping(_ responses: [Response]) -> Void) {
         var responses = [Response]()
         db.collection("room/\(roomId)/prompt/iJK3A4z3FB7iYRDlTHmH/response").getDocuments() { (querySnapshot, err) in
@@ -50,7 +51,7 @@ class ResponseService {
     }
     
     func addResponse(roomId: String, response: Response) {
-        db.collection("room/9NrgXvSuh11xycZcSvAN/response").document().setData(response.toDict()) { err in
+        db.collection("room/9NrgXvSuh11xycZcSvAN/prompt/iJK3A4z3FB7iYRDlTHmH/response").document().setData(response.toDict()) { err in
             if let err = err {
                 print("Error saving new response: \(err)")
             } else {

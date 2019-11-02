@@ -13,12 +13,12 @@ struct NewResponseView: View {
     @State private var showPopover: Bool = false
     @State private var newResponse: String = ""
     
-    var roomId: String
-    var promptId: String
+    var room: Room
+    var prompt: Prompt
     
-    init(roomId: String, promptId: String) {
-        self.roomId = roomId
-        self.promptId = promptId
+    init(room: Room, prompt: Prompt) {
+        self.room = room
+        self.prompt = prompt
     }
 
     var body: some View {
@@ -36,13 +36,13 @@ struct NewResponseView: View {
                             "text": self.newResponse,
                             "dateCreated": Timestamp(date: Date())
                         ])
-                        responseService.addResponse(roomId: self.roomId, promptId: self.promptId, response: response)
+                        responseService.addResponse(roomId: self.room.id, promptId: self.prompt.id, response: response)
                         self.showPopover = false
                     }, label: { Text("Submit") })
                    
                 }.padding()
                 Spacer()
-                Text("$prompt")
+                Text("\(self.prompt.text)")
                 TextField("Your response", text: self.$newResponse)
                     .multilineTextAlignment(.center)
                 Spacer()

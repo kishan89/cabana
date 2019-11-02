@@ -40,7 +40,7 @@ struct RoomView: View {
             }
 
             if self.roomViewModel.activePrompt != nil {
-                NewResponseView(roomId: self.room.id, promptId: self.roomViewModel.activePrompt!.id)
+                NewResponseView(room: self.room, prompt: self.roomViewModel.activePrompt!)
             }
         }
         .navigationBarTitle(Text("\(room.name)"))

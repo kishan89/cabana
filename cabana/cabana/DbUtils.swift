@@ -43,24 +43,6 @@ class DbUtils {
             }
         }
     }
-    
-    static func getRooms(completion: @escaping (_ rooms: [Room]) -> Void) -> Void {
-        let db = Firestore.firestore()
-
-        var rooms = [Room]()
-        db.collection("room").getDocuments() { (querySnapshot, err) in
-            if let err = err {
-                print("Error getting documents: \(err)")
-            } else {
-                for document in querySnapshot!.documents {
-                    let room: Room = Room(id: document.documentID, data: document.data() as NSDictionary)
-                    rooms.append(room)
-                }
-                completion(rooms)
-
-            }
-        }
-    }
         
     static func randomString(length: Int) -> String {
       let letters = "abcdefghijklmnopqrstuvwxyz"

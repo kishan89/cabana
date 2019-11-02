@@ -16,6 +16,7 @@ struct ResponseView: View {
     var body: some View {
         VStack {
             HStack {
+                Text("\(Utils.dateString(date: response.dateCreated?.dateValue()))")
                 Text("$user")
                 Text("\(response.text ?? "n/a")")
                 .foregroundColor(Color.white)

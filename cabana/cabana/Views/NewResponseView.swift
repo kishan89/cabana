@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Firebase
 
 struct NewResponseView: View {
     @Binding var showPopover: Bool
@@ -19,7 +20,8 @@ struct NewResponseView: View {
                 Spacer()
                 Button(action: {
                     let response: Response = Response(data: [
-                        "text": self.newResponse
+                        "text": self.newResponse,
+                        "dateCreated": Timestamp(date: Date())
                     ])
                     responseService.addResponse(roomId: "9NrgXvSuh11xycZcSvAN", response: response)
                     self.showPopover = false

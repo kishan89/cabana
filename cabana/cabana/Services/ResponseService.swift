@@ -33,8 +33,9 @@ class ResponseService {
     }
     
     func listenForResponseChanges(roomId: String, update: @escaping(_ responses: [Response]) -> ()) -> (ListenerRegistration?) {
-        //TODO: order by timestamp
+        //TODO: order by d  ateCreated
         let listener = db.collection("room/\(roomId)/prompt/iJK3A4z3FB7iYRDlTHmH/response")
+        .order(by: "dateCreated")
         .addSnapshotListener { querySnapshot, error in
             guard let documents = querySnapshot?.documents else {
                 print("Error fetching response documents: \(error!)")

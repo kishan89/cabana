@@ -15,7 +15,6 @@ struct RoomView: View {
     var room: Room
     
     @ObservedObject var roomViewModel: RoomViewModel
-    @State private var showPopover: Bool = false
     
     init(room: Room) {
         self.room = room
@@ -39,15 +38,9 @@ struct RoomView: View {
             List(roomViewModel.responses) { response in
                 ResponseView(response: response)
             }
-            // TODO: conditionally show '+' button
-            // if self.roomViewModel.activePrompt {
-            Button("+") {
-                self.showPopover = true
-            }.popover(
-                isPresented: self.$showPopover,
-                arrowEdge: .bottom
-            ) {
-                NewResponseView(showPopover: self.$showPopover)//, roomId: room.id, promptId: "$promptId")
+
+            if self.roomViewModel.activePrompt != nil {
+                NewResponseView(roomId: self.room.id, promptId: self.roomViewModel.activePrompt!.id)
             }
         }
         .navigationBarTitle(Text("\(room.name)"))

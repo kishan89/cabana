@@ -32,9 +32,9 @@ class ResponseService {
         }
     }
     
-    func listenForResponseChanges(roomId: String, update: @escaping(_ responses: [Response]) -> ()) -> (ListenerRegistration?) {
+    func listenForResponseChanges(roomId: String, promptId: String, update: @escaping(_ responses: [Response]) -> ()) -> (ListenerRegistration?) {
         //TODO: order by dateCreated
-        let listener = db.collection("room/\(roomId)/prompt/iJK3A4z3FB7iYRDlTHmH/response")
+        let listener = db.collection("room/\(roomId)/prompt/\(promptId)/response")
         .order(by: "dateCreated")
         .addSnapshotListener { querySnapshot, error in
             guard let documents = querySnapshot?.documents else {

@@ -35,5 +35,20 @@ class UserService {
         }
         return (listener)
     }
+    
+    func getUsersForRoom(roomId: String, completion: @escaping(_ users: [User]) -> Void) {
+        var users = [User]()
+        db.collection("users").whereField("roomIds", arrayContains: roomId).getDocuments() { (querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+            } else {
+                for document in querySnapshot!.documents {
+                    let user: User = User(id: document.documentID, data: document.data() as NSDictionary)
+                    users.append(user)
+                }
+                completion(users)
+            }
+        }
+    }
 
 }

@@ -30,7 +30,6 @@ class PromptService {
                         prompt = Prompt(id: docs[0].documentID, data: docs[0].data() as NSDictionary)
                     }
                 }
-                print("here bruh")
                 completion(prompt)
             }
         }

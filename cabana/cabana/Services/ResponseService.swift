@@ -60,4 +60,19 @@ class ResponseService {
             }
         }
     }
+    
+    func userSubmittedResponse(roomId: String, promptId: String, completion: @escaping(_ responseFound: Bool) -> Void) {
+        db.collection("room/\(roomId)/prompt/\(promptId)/response").whereField("userId", isEqualTo: userService.getCurrentUserId()).getDocuments() { (querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+                completion(false)
+            } else {
+                if (querySnapshot!.documents.count > 0) {
+                    completion(true)
+                } else {
+                    completion(false)
+                }
+            }
+        }
+    }
 }

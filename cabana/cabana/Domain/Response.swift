@@ -11,21 +11,25 @@ struct Response: Identifiable {
     var id: String?
     var text: String?
     var dateCreated: Timestamp?
+    var userId: String?
     init(id: String, data: NSDictionary) {
         self.id = id
         self.text = data["text"] as? String
         self.dateCreated = data["dateCreated"] as? Timestamp
+        self.userId = data["userId"] as? String
     }
     init(data: NSDictionary) {
         self.text = data["text"] as? String
         self.dateCreated = data["dateCreated"] as? Timestamp
+        self.userId = data["userId"] as? String
     }
     func toDict() -> [String : Any] {
         return [
             //TODO: fix so that we only send non-null values to the firestore
             //"id": id,
             "text": text,
-            "dateCreated": dateCreated
+            "dateCreated": dateCreated,
+            "userId": userId
         ]
     }
 }

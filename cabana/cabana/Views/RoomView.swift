@@ -33,6 +33,8 @@ struct RoomView: View {
                     .padding()
                 }
             }
+            // TODO: add inactive prompt views
+            
             if self.roomViewModel.activePrompt != nil {
                 Divider()
                 ActivePromptView(room: self.room, activePrompt: self.roomViewModel.activePrompt!)

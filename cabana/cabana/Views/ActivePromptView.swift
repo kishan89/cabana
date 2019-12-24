@@ -27,7 +27,9 @@ struct ActivePromptView: View {
             List(activePromptViewModel.responses) { response in
                 ResponseView(response: response)
             }
-            NewResponseView(room: self.room, prompt: self.activePrompt)
+            if(activePromptViewModel.canSubmitResponse) {
+                NewResponseView(room: self.room, activePrompt: self.activePrompt)
+            }
         }
         .onAppear {
             self.activePromptViewModel.load()
@@ -41,6 +43,13 @@ struct ActivePromptView: View {
 public class ActivePromptViewModel: ObservableObject {
     var room: Room
     var activePrompt: Prompt
+    var canSubmitResponse: Bool = false {
+        didSet {
+            print("did set canSubmitResponse: \(canSubmitResponse)")
+            objectWillChange.send(self)
+        }
+    }
+    
     init(room: Room, activePrompt: Prompt) {
         self.room = room
         self.activePrompt = activePrompt
@@ -60,6 +69,14 @@ public class ActivePromptViewModel: ObservableObject {
         self.responseListener = responseService.listenForResponseChanges(roomId: self.room.id, promptId: self.activePrompt.id) { responses in
             print("responses have changed: \(responses)")
             self.responses = responses
+            self.checkIfUserCanSubmitResponse()
+        }
+    }
+    
+    func checkIfUserCanSubmitResponse() {
+        responseService.userSubmittedResponse(roomId: room.id, promptId: activePrompt.id) { responseFound in
+            print("responseFound: \(responseFound)")
+            self.canSubmitResponse = !responseFound
         }
     }
     

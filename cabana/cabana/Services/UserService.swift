@@ -50,5 +50,8 @@ class UserService {
             }
         }
     }
-
+    
+    func getCurrentUserId() -> String {
+        return "2oNfwEFXqzCHe2dJ3vFG"
+    }
 }

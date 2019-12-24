@@ -8,45 +8,65 @@
 
 import SwiftUI
 import Firebase
+import Combine
 
 struct NewResponseView: View {
     @State private var showPopover: Bool = false
     @State private var newResponse: String = ""
+    @ObservedObject var newResponseViewModel: NewResponseViewModel
     
     var room: Room
     var prompt: Prompt
     
-    init(room: Room, prompt: Prompt) {
+    init(room: Room, activePrompt: Prompt) {
         self.room = room
-        self.prompt = prompt
+        self.prompt = activePrompt
+        self.newResponseViewModel = NewResponseViewModel(room: room, activePrompt: activePrompt)
     }
 
     var body: some View {
-        Button("+") {
-            self.showPopover = true
-        }.popover(
-            isPresented: self.$showPopover,
-            arrowEdge: .bottom
-        ) {
-            VStack {
-                HStack {
+        VStack {
+            Button("+") {
+                self.showPopover = true
+            }
+            .popover(
+                isPresented: self.$showPopover,
+                arrowEdge: .bottom
+            ) {
+                VStack {
+                    HStack {
+                        Spacer()
+                        Button(action: {
+                            let response: Response = Response(data: [
+                                "text": self.newResponse,
+                                "dateCreated": Timestamp(date: Date()),
+                                "userId": userService.getCurrentUserId()
+                            ])
+                            responseService.addResponse(roomId: self.room.id, promptId: self.prompt.id, response: response)
+                            self.newResponse = ""
+                            self.showPopover = false
+                        }, label: { Text("Submit") })
+                       
+                    }.padding()
                     Spacer()
-                    Button(action: {
-                        let response: Response = Response(data: [
-                            "text": self.newResponse,
-                            "dateCreated": Timestamp(date: Date())
-                        ])
-                        responseService.addResponse(roomId: self.room.id, promptId: self.prompt.id, response: response)
-                        self.showPopover = false
-                    }, label: { Text("Submit") })
-                   
-                }.padding()
-                Spacer()
-                Text("\(self.prompt.text)")
-                TextField("Your response", text: self.$newResponse)
-                    .multilineTextAlignment(.center)
-                Spacer()
+                    Text("\(self.prompt.text)")
+                    TextField("Your response", text: self.$newResponse)
+                        .multilineTextAlignment(.center)
+                    Spacer()
+                }
             }
         }
     }
+}
+
+public class NewResponseViewModel: ObservableObject {
+    var room: Room
+    var activePrompt: Prompt
+    
+    init(room: Room, activePrompt: Prompt) {
+        self.room = room
+        self.activePrompt = activePrompt
+    }
+    
+    public let objectWillChange = PassthroughSubject<NewResponseViewModel, Never>()
 }

@@ -75,4 +75,20 @@ class ResponseService {
             }
         }
     }
+    
+    
+    // MARK: Voting
+    func addVote(roomId: String, promptId: String, responseId: String) {
+        // add to 'votes' array and merge new data with existing data
+        db.collection("room/\(roomId)/prompt/\(promptId)/response").document(responseId)
+            .setData([
+                "votes": FieldValue.arrayUnion([userService.getCurrentUserId()])
+            ], merge: true) { err in
+            if let err = err {
+                print("Error adding vote to response: \(err)")
+            } else {
+                print("New vote successfully added")
+            }
+        }
+    }
 }

@@ -25,7 +25,7 @@ struct ActivePromptView: View {
             Text(self.activePrompt.text)
                 .padding()
             List(activePromptViewModel.responses) { response in
-                ResponseView(response: response)
+                ResponseView(room: self.room, prompt: self.activePrompt, response: response)
             }
             if(activePromptViewModel.canSubmitResponse) {
                 NewResponseView(room: self.room, activePrompt: self.activePrompt)
@@ -74,6 +74,15 @@ public class ActivePromptViewModel: ObservableObject {
     }
     
     func checkIfUserCanSubmitResponse() {
+        //TEMP
+        self.canSubmitResponse = true
+        return
+        //END TEMP
+        
+        if (activePrompt.userId == userService.getCurrentUserId()) {
+            self.canSubmitResponse = false
+            return
+        }
         responseService.userSubmittedResponse(roomId: room.id, promptId: activePrompt.id) { responseFound in
             print("responseFound: \(responseFound)")
             self.canSubmitResponse = !responseFound

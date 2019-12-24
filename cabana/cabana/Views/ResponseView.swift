@@ -10,8 +10,12 @@ import SwiftUI
 
 struct ResponseView: View {
     var response: Response
-    init(response: Response) {
+    var room: Room
+    var prompt: Prompt
+    init(room: Room, prompt: Prompt, response: Response) {
         self.response = response
+        self.room = room
+        self.prompt = prompt
     }
     var body: some View {
         VStack {
@@ -23,7 +27,10 @@ struct ResponseView: View {
                 .padding(10)
                 .background(Color.blue)
                 .cornerRadius(10)
+                Text("\(response.votes.count)")
             }
+        }.onTapGesture {
+            responseService.addVote(roomId: self.room.id, promptId: self.prompt.id, responseId: self.response.id!)
         }
     }
 }

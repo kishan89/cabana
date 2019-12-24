@@ -12,16 +12,20 @@ struct Response: Identifiable {
     var text: String?
     var dateCreated: Timestamp?
     var userId: String?
+    var votes: Array<String>
+    
     init(id: String, data: NSDictionary) {
         self.id = id
         self.text = data["text"] as? String
         self.dateCreated = data["dateCreated"] as? Timestamp
         self.userId = data["userId"] as? String
+        self.votes = data["votes"] as? Array<String> ?? [String]()
     }
     init(data: NSDictionary) {
         self.text = data["text"] as? String
         self.dateCreated = data["dateCreated"] as? Timestamp
         self.userId = data["userId"] as? String
+        self.votes = data["votes"] as? Array<String> ?? [String]()
     }
     func toDict() -> [String : Any] {
         return [
@@ -29,7 +33,8 @@ struct Response: Identifiable {
             //"id": id,
             "text": text,
             "dateCreated": dateCreated,
-            "userId": userId
+            "userId": userId,
+            "votes": votes
         ]
     }
 }

@@ -22,6 +22,7 @@ struct ActivePromptView: View {
     }
     var body: some View {
         VStack {
+            Text("Active Prompt:")
             Text(self.activePrompt.text)
                 .padding()
             List(activePromptViewModel.responses) { response in

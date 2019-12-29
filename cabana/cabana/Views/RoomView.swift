@@ -33,6 +33,8 @@ struct RoomView: View {
                     .padding()
                 }
             }
+            // TODO: add room status view
+            
             // TODO: add inactive prompt views
             
             if self.roomViewModel.activePrompt != nil {
@@ -42,10 +44,13 @@ struct RoomView: View {
         }
         .navigationBarTitle(Text("\(room.name)"))
         .onAppear {
+            // TODO: create/delete RoomViewModel on appear/dissapear?
+        
             self.roomViewModel.load()
         }
         .onDisappear {
             self.roomViewModel.activePrompt = nil
+            self.roomViewModel.prompts = []
         }
     }
 }
@@ -54,6 +59,13 @@ public class RoomViewModel: ObservableObject {
     var room: Room
     var activePrompt: Prompt? = nil {
         didSet {
+            objectWillChange.send(self)
+        }
+    }
+    var promptListener: ListenerRegistration?
+    var prompts: [Prompt] = [Prompt]() {
+        didSet {
+            print("did set prompts")
             objectWillChange.send(self)
         }
     }
@@ -73,10 +85,16 @@ public class RoomViewModel: ObservableObject {
         userService.getUsersForRoom(roomId: self.room.id) { users in
             self.users = users
             print("users: \(self.users)")
-            // TODO: figure out why active prompt must be fetched after users are fetched
-            promptService.getActivePromptForRoom(roomId: self.room.id) { prompt in
-                print("active prompt: \(prompt?.text ?? "nil")")
-                self.activePrompt = prompt
+            // TODO: figure out why / double-check if prompts must be fetched after users are fetched
+            self.promptListener = promptService.listenForPromptChanges(roomId: self.room.id) { prompts in
+                print("prompts have changed: \(prompts)")
+                self.prompts = prompts
+                for prompt: Prompt in prompts {
+                    if prompt.active {
+                        print("active prompt: \(prompt.text)")
+                        self.activePrompt = prompt
+                    }
+                }
             }
         }
     }

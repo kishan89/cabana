@@ -10,9 +10,11 @@ struct Prompt: Codable, Identifiable {
     var id: String
     var text: String
     var userId: String
+    var active: Bool
     init(id: String, data: NSDictionary) {
         self.id = id
         self.text = data["text"] as? String ?? ""
         self.userId = data["userId"] as? String ?? ""
+        self.active = data["active"] as? Bool ?? false
     }
 }

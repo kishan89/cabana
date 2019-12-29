@@ -89,11 +89,17 @@ public class RoomViewModel: ObservableObject {
             self.promptListener = promptService.listenForPromptChanges(roomId: self.room.id) { prompts in
                 print("prompts have changed: \(prompts)")
                 self.prompts = prompts
+                var foundActivePrompt: Bool = false
                 for prompt: Prompt in prompts {
                     if prompt.active {
                         print("active prompt: \(prompt.text)")
                         self.activePrompt = prompt
+                        foundActivePrompt = true
                     }
+                    if !foundActivePrompt {
+                        self.activePrompt = nil
+                    }
+                    
                 }
             }
         }

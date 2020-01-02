@@ -198,7 +198,6 @@
 				A6D25EEC23569BAA00EB1998 /* NewResponseView.swift */,
 				A6D25EEE2356A47900EB1998 /* ResponseView.swift */,
 				A6DEA762235B917D00CED7EE /* NewRoomView.swift */,
-				A670E6A723B7E25C00CE8FEF /* RoomStatusView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";

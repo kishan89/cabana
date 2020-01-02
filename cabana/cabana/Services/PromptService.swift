@@ -55,4 +55,37 @@ class PromptService {
             }
         return (listener)
     }
+    
+    func setPromptInactive(roomId: String, promptId: String) -> Void {
+        db.collection("room/\(roomId)/prompt").document(promptId)
+            .setData([
+                "active": false
+            ], merge: true) { err in
+            if let err = err {
+                print("Error setting prompt to inactive: \(err)")
+            } else {
+                print("Prompt \(promptId) set to inactive")
+            }
+        }
+    }
+    
+    // Not used
+    func listenForActivePromptChanges(roomId: String, update: @escaping(_ activePrompt: Prompt?) -> ()) -> (ListenerRegistration?) {
+        let listener = db.collection("room/\(roomId)/prompt")
+        .whereField("active", isEqualTo: true)
+        .addSnapshotListener { querySnapshot, error in
+            guard let documents = querySnapshot?.documents else {
+                print("Error fetching active prompt documents: \(error!)")
+                return
+            }
+            if (documents.count == 1) {
+                let document = documents[0]
+                let activePrompt = Prompt(id: document.documentID, data: document.data() as NSDictionary)
+                update(activePrompt)
+            } else {
+                update(nil)
+            }
+        }
+        return (listener)
+    }
 }

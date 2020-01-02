@@ -33,6 +33,7 @@ struct ActivePromptView: View {
             }
         }
         .onAppear {
+            print("active prompt appearing..")
             self.activePromptViewModel.load()
         }
         .onDisappear {
@@ -41,41 +42,95 @@ struct ActivePromptView: View {
     }
 }
 
+// MARK: View Model
 public class ActivePromptViewModel: ObservableObject {
+    public let objectWillChange = PassthroughSubject<ActivePromptViewModel, Never>()
     var room: Room
     var activePrompt: Prompt
-    var canSubmitResponse: Bool = false {
-        didSet {
-            print("did set canSubmitResponse: \(canSubmitResponse)")
-            objectWillChange.send(self)
-        }
-    }
+    var activePromptListener: ListenerRegistration?
     
     init(room: Room, activePrompt: Prompt) {
         self.room = room
         self.activePrompt = activePrompt
     }
     
-    public let objectWillChange = PassthroughSubject<ActivePromptViewModel, Never>()
+    var canSubmitResponse: Bool = false {
+        didSet {
+            print("did set canSubmitResponse: \(canSubmitResponse)")
+            objectWillChange.send(self)
+        }
+    }
+
     var responseListener: ListenerRegistration?
     var responses: [Response] = [Response]() {
         didSet {
-            print("did set responses")
+            print("did set/change responses")
             objectWillChange.send(self)
         }
     }
     
-    func load() {
-        os_log("action='adding response listener for active prompt' | roomId='$roomId'", log: OSLog.default, type: .info)
-        self.responseListener = responseService.listenForResponseChanges(roomId: self.room.id, promptId: self.activePrompt.id) { responses in
-            print("responses have changed: \(responses)")
-            self.responses = responses
-            self.checkIfUserCanSubmitResponse()
+    var userListener: ListenerRegistration?
+    var users: [User] = [User]() {
+        didSet {
+            print("did set/change users")
+            objectWillChange.send(self)
         }
     }
     
+    var userChangesCount: Int = 0
+    func load() {
+        os_log("action='adding response and user listener for active prompt' | roomId='$roomId'", log: OSLog.default, type: .info)
+        
+        self.userListener = userService.listenForUserChanges(roomId: self.room.id) { users in
+            self.userChangesCount += 1
+            print("users have changed: \(users.map({$0.id}))")
+            self.users = users
+            
+            //only register the response listener once && after the users are populated
+            if (self.userChangesCount == 1) {
+                self.responseListener = responseService.listenForResponseChanges(roomId: self.room.id, promptId: self.activePrompt.id) { responses in
+                    print("responses have changed: \(responses.map({$0.id}))")
+                    self.responses = responses
+                    self.checkIfUserCanSubmitResponse()
+                    
+                    // checkIfResponsesNeeded
+                    
+                    if self.allUsersHaveResponded() && self.allUsersHaveVoted() {
+                        promptService.setPromptInactive(roomId: self.room.id, promptId: self.activePrompt.id)
+                    }
+                }
+            }
+            // only check if prompt should be active after 1st registration,
+            // because for 1st registration the response listener will handle that
+            // (avoids double call to method)
+            if self.userChangesCount > 1 && self.allUsersHaveResponded() && self.allUsersHaveVoted() {
+                promptService.setPromptInactive(roomId: self.room.id, promptId: self.activePrompt.id)
+            }
+        }
+    }
+    
+    func allUsersHaveVoted() -> Bool {
+        let uniqueUsers: Set = Set(self.users.map({ $0.id }))
+        var uniqueVotes: Set = Set<String>()
+    
+        for response in self.responses {
+            for vote in response.votes {
+                uniqueVotes.insert(vote)
+            }
+        }
+        print("all users have voted: \(uniqueUsers == uniqueVotes)")
+        return uniqueUsers == uniqueVotes
+    }
+    
+    func allUsersHaveResponded() -> Bool {
+        let uniqueUsers: Set = Set(self.users.map({ $0.id }))
+        let uniqueResponses: Set = Set(self.responses.compactMap({ $0.userId ?? nil }))
+        print("all users have responded: \(uniqueUsers == uniqueResponses)")
+        return uniqueUsers == uniqueResponses
+    }
+    
     func checkIfUserCanSubmitResponse() {
-        //TEMP
+        //TEMP (for testing)
         self.canSubmitResponse = true
         return
         //END TEMP

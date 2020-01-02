@@ -40,6 +40,8 @@ struct RoomView: View {
             if self.roomViewModel.activePrompt != nil {
                 Divider()
                 ActivePromptView(room: self.room, activePrompt: self.roomViewModel.activePrompt!)
+            } else {
+                Text("No active prompt!")
             }
         }
         .navigationBarTitle(Text("\(room.name)"))
@@ -59,6 +61,7 @@ public class RoomViewModel: ObservableObject {
     var room: Room
     var activePrompt: Prompt? = nil {
         didSet {
+            print("activePrompt changed: \(self.activePrompt)")
             objectWillChange.send(self)
         }
     }

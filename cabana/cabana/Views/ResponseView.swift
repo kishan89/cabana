@@ -48,16 +48,16 @@ public class ResponseViewModel: ObservableObject {
     }
     
     func addOrReassignVote() {
-        responseService.findResponseWithMyVote(roomId: room.id, promptId: prompt.id) { responseId in
+        voteService.findResponseWithMyVote(roomId: room.id, promptId: prompt.id) { responseId in
             if (responseId != nil) {
                 if (responseId! == self.response.id!) {
                     return
                 }
                 // reassign vote
-                responseService.reassignVote(roomId: self.room.id, promptId: self.prompt.id, oldResponseId: responseId!, newResponseId: self.response.id!)
+                voteService.reassignVote(roomId: self.room.id, promptId: self.prompt.id, oldResponseId: responseId!, newResponseId: self.response.id!)
                 print("found response with my vote, \(responseId)")
             } else {
-                responseService.addVote(roomId: self.room.id, promptId: self.prompt.id, responseId: self.response.id!)
+                voteService.addVote(roomId: self.room.id, promptId: self.prompt.id, responseId: self.response.id!)
             }
         }
     }

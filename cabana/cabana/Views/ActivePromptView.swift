@@ -93,8 +93,6 @@ public class ActivePromptViewModel: ObservableObject {
                     self.responses = responses
                     self.checkIfUserCanSubmitResponse()
                     
-                    // checkIfResponsesNeeded
-                    
                     if self.allUsersHaveResponded() && self.allUsersHaveVoted() {
                         promptService.setPromptInactive(roomId: self.room.id, promptId: self.activePrompt.id)
                     }

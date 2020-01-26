@@ -14,7 +14,9 @@ import os
 struct ActivePromptView: View {
     var room: Room
     var activePrompt: Prompt
+    @State private var showPopover: Bool = false
     @ObservedObject var activePromptViewModel: ActivePromptViewModel
+    
     init(room: Room, activePrompt: Prompt) {
         self.room = room
         self.activePrompt = activePrompt
@@ -23,21 +25,38 @@ struct ActivePromptView: View {
     var body: some View {
         VStack {
             Text("Active Prompt:")
-            Text(self.activePrompt.text)
-                .padding()
-            List(activePromptViewModel.responses) { response in
-                ResponseView(room: self.room, prompt: self.activePrompt, response: response)
+            Button(self.activePrompt.text) {
+                self.showPopover = true
             }
-            if(activePromptViewModel.canSubmitResponse) {
-                NewResponseView(room: self.room, activePrompt: self.activePrompt)
+            .popover(
+                isPresented: self.$showPopover,
+                arrowEdge: .bottom
+            ) {
+                VStack {
+                    VStack(alignment: .trailing) {
+                        Button("Done") {
+                            self.showPopover = false
+                        }
+                    }
+                    
+                    Text("Active Prompt:")
+                    Text(self.activePrompt.text)
+                        .padding()
+                    List(self.activePromptViewModel.responses) { response in
+                        ResponseView(room: self.room, prompt: self.activePrompt, response: response)
+                    }
+                    if(self.activePromptViewModel.canSubmitResponse) {
+                        NewResponseView(room: self.room, activePrompt: self.activePrompt)
+                    }
+                }
+                .onAppear {
+                    print("active prompt appearing..")
+                    self.activePromptViewModel.load()
+                }
+                .onDisappear {
+                    self.activePromptViewModel.removeListener()
+                }
             }
-        }
-        .onAppear {
-            print("active prompt appearing..")
-            self.activePromptViewModel.load()
-        }
-        .onDisappear {
-            self.activePromptViewModel.removeListener()
         }
     }
 }
@@ -79,6 +98,7 @@ public class ActivePromptViewModel: ObservableObject {
     
     var userChangesCount: Int = 0
     func load() {
+        userChangesCount = 0
         os_log("action='adding response and user listener for active prompt' | roomId='$roomId'", log: OSLog.default, type: .info)
         
         self.userListener = userService.listenForUserChanges(roomId: self.room.id) { users in
@@ -98,7 +118,7 @@ public class ActivePromptViewModel: ObservableObject {
                     }
                 }
             }
-            // only check if prompt should be active after 1st registration,
+            // only check if prompt should be active after 1st user registration,
             // because for 1st registration the response listener will handle that
             // (avoids double call to method)
             if self.userChangesCount > 1 && self.allUsersHaveResponded() && self.allUsersHaveVoted() {

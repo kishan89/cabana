@@ -36,6 +36,9 @@ struct RoomView: View {
             // TODO: add room status view
             
             // TODO: add inactive prompt views
+            ForEach(self.roomViewModel.inactivePrompts) { inactivePrompt in
+                Text(inactivePrompt.text)
+            }
             
             if self.roomViewModel.activePrompt != nil {
                 Divider()
@@ -52,7 +55,8 @@ struct RoomView: View {
         }
         .onDisappear {
             self.roomViewModel.activePrompt = nil
-            self.roomViewModel.prompts = []
+            self.roomViewModel.inactivePrompts = []
+            self.roomViewModel.removeListeners()
         }
     }
 }
@@ -61,14 +65,14 @@ public class RoomViewModel: ObservableObject {
     var room: Room
     var activePrompt: Prompt? = nil {
         didSet {
-            print("activePrompt changed: \(self.activePrompt)")
+            print("did set activePrompt: \(self.activePrompt)")
             objectWillChange.send(self)
         }
     }
     var promptListener: ListenerRegistration?
-    var prompts: [Prompt] = [Prompt]() {
+    var inactivePrompts: [Prompt] = [Prompt]() {
         didSet {
-            print("did set prompts")
+            print("did set inactive prompts")
             objectWillChange.send(self)
         }
     }
@@ -91,20 +95,31 @@ public class RoomViewModel: ObservableObject {
             // TODO: figure out why / double-check if prompts must be fetched after users are fetched
             self.promptListener = promptService.listenForPromptChanges(roomId: self.room.id) { prompts in
                 print("prompts have changed: \(prompts)")
-                self.prompts = prompts
-                var foundActivePrompt: Bool = false
+                var activePrompt: Prompt? = nil
+                var inactivePrompts = [Prompt]()
+                
                 for prompt: Prompt in prompts {
                     if prompt.active {
                         print("active prompt: \(prompt.text)")
-                        self.activePrompt = prompt
-                        foundActivePrompt = true
+                        activePrompt = prompt
+                    } else {
+                        inactivePrompts.append(prompt)
                     }
-                    if !foundActivePrompt {
-                        self.activePrompt = nil
-                    }
+                    self.activePrompt = activePrompt
+                    self.inactivePrompts = inactivePrompts
                     
                 }
             }
+        }
+    }
+    
+    func removeListeners() {
+        print("removing listeners for room view...")
+        if let userListener = self.userListener {
+            userListener.remove()
+        }
+        if let promptListener = self.promptListener {
+            promptListener.remove()
         }
     }
 }

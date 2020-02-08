@@ -16,21 +16,12 @@ struct ContentView: View {
     }
     var body: some View {
         NavigationView {
-            RoomsView()
-            .navigationBarTitle(Text("your rooms"))
-            .navigationBarItems(trailing: Button(action: {
-                self.showPopover = true
-            }, label: {
-                Text("new").font(.custom("SF Pro Display", size: 24))
-            })
-            .padding()
-            .foregroundColor(Colors.active))
-            // TODO: fix popover, doesn't work when pressed a second time
-            .popover(isPresented: self.$showPopover, arrowEdge: .bottom) {
-                NewRoomView(showPopover: self.$showPopover)
+            VStack {
+                NewRoomView()
+                RoomsView()
+                .navigationBarTitle(Text("your rooms"))
             }
         }
-    
     }
 }
 

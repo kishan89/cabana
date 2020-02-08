@@ -9,15 +9,22 @@
 import SwiftUI
 
 struct NewRoomView: View {
-    @Binding var showPopover: Bool
+    @State private var showPopover: Bool = false
+    
     var body: some View {
         VStack {
-            Button(action: {
-                self.showPopover = false
-            }, label: { Text("Done") })
-                
-            Spacer()
-            Text("Hello World!")
+            Button("new") {
+                self.showPopover = true
+            }
+            .sheet(isPresented: self.$showPopover) {
+                Button(action: {
+                    self.showPopover = false
+                }, label: { Text("Done") })
+                    
+                Spacer()
+                Text("Hello World!")
+            }
+            
         }
     }
 }

@@ -8,6 +8,7 @@
 
 import SwiftUI
 import Combine
+import os
 
 struct RoomsView: View {
     @ObservedObject var roomsViewModel = RoomsViewModel()
@@ -18,6 +19,7 @@ struct RoomsView: View {
     }
     var body: some View {
         VStack(alignment: .leading) {
+            NewRoomView(userId: self.roomsViewModel.userId)
             List(roomsViewModel.rooms) { room in
                RoomListItem(room: room)
                 // TODO: make width dynamic
@@ -52,7 +54,7 @@ public class RoomsViewModel: ObservableObject {
     public let objectWillChange = PassthroughSubject<RoomsViewModel, Never>()
     var rooms: [Room] = [Room]() {
         didSet {
-            print("rooms have been set")
+            os_log("rooms have been set | count=%@", "\(rooms.count)")
             objectWillChange.send(self)
         }
     }

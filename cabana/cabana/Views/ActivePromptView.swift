@@ -99,7 +99,7 @@ public class ActivePromptViewModel: ObservableObject {
     var userChangesCount: Int = 0
     func load() {
         userChangesCount = 0
-        os_log("action='adding response and user listener for active prompt' | roomId='$roomId'", log: OSLog.default, type: .info)
+        os_log("action='adding response and user listener for active prompt' | roomId=%@", self.room.id)
         
         self.userListener = userService.listenForUserChanges(roomId: self.room.id) { users in
             self.userChangesCount += 1

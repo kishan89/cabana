@@ -31,10 +31,10 @@ struct Response: Identifiable {
         return [
             //TODO: fix so that we only send non-null values to the firestore
             //"id": id,
-            "text": text,
+            "text":        text,
             "dateCreated": dateCreated,
-            "userId": userId,
-            "votes": votes
+            "userId":      userId,
+            "votes":       votes
         ]
     }
 }

@@ -17,7 +17,6 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             VStack {
-                NewRoomView()
                 RoomsView()
                 .navigationBarTitle(Text("your rooms"))
             }

@@ -54,4 +54,8 @@ class UserService {
     func getCurrentUserId() -> String {
         return "2oNfwEFXqzCHe2dJ3vFG"
     }
+    
+    func getUsername(userId: String?) -> String {
+        return userId ?? "Unknown"
+    }
 }

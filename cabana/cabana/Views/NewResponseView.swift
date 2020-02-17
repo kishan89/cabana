@@ -29,9 +29,8 @@ struct NewResponseView: View {
             Button("+") {
                 self.showPopover = true
             }
-            .popover(
-                isPresented: self.$showPopover,
-                arrowEdge: .bottom
+            .sheet(
+                isPresented: self.$showPopover
             ) {
                 VStack {
                     HStack {

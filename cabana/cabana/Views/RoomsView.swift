@@ -18,6 +18,7 @@ struct RoomsView: View {
     }
     var body: some View {
         VStack(alignment: .leading) {
+            NewRoomView(userId: userService.getCurrentUserId())
             List(roomsViewModel.rooms) { room in
                RoomListItem(room: room)
                 // TODO: make width dynamic
@@ -48,7 +49,6 @@ struct RoomListItem: View {
 }
 
 public class RoomsViewModel: ObservableObject {
-    var userId: String = "2oNfwEFXqzCHe2dJ3vFG"
     public let objectWillChange = PassthroughSubject<RoomsViewModel, Never>()
     var rooms: [Room] = [Room]() {
         didSet {
@@ -57,7 +57,8 @@ public class RoomsViewModel: ObservableObject {
         }
     }
     func load() {
-        roomService.getRooms(userId: userId) { rooms in
+        // TODO: listen for room changes instead, since a new room can get created in another view
+        roomService.getRooms(userId: userService.getCurrentUserId()) { rooms in
             self.rooms = rooms
         }
     }

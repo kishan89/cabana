@@ -18,9 +18,9 @@ target 'cabana' do
   # pod 'FirebaseUI/Auth'
   # pod 'FirebaseUI/Phone'
   
-  pod 'FacebookLogin'
-  pod 'FBSDKLoginKit'
-  pod 'FBSDKCoreKit'
+  # pod 'FacebookLogin'
+  # pod 'FBSDKLoginKit'
+  # pod 'FBSDKCoreKit'
   
   target 'cabanaTests' do
     inherit! :search_paths

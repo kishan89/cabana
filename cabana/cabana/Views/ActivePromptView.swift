@@ -28,24 +28,24 @@ struct ActivePromptView: View {
             Button(self.activePrompt.text) {
                 self.showPopover = true
             }
-            .popover(
-                isPresented: self.$showPopover,
-                arrowEdge: .bottom
+            .sheet(
+                isPresented: self.$showPopover
             ) {
-                VStack {
+                VStack(alignment: .leading) {
                     VStack(alignment: .trailing) {
                         Button("Done") {
                             self.showPopover = false
                         }
                     }
+                    .padding()
                     
-                    Text("Active Prompt:")
                     Text(self.activePrompt.text)
+                        .bold()
                         .padding()
                     List(self.activePromptViewModel.responses) { response in
-                        ResponseView(room: self.room, prompt: self.activePrompt, response: response)
+                        ResponseView(room: self.room, prompt: self.activePrompt, response: response, viewState: self.activePromptViewModel.viewState)
                     }
-                    if(self.activePromptViewModel.canSubmitResponse) {
+                    if(self.activePromptViewModel.viewState == .respond) {
                         NewResponseView(room: self.room, activePrompt: self.activePrompt)
                     }
                 }
@@ -61,12 +61,26 @@ struct ActivePromptView: View {
     }
 }
 
+struct ActivePromptView_Previews: PreviewProvider {
+    static var previews: some View {
+        let room = Room(id: "r1", data: ["name": "Test Room", "userIds": ["user1", "user2"]])
+        let prompt = Prompt(id: "p1", data: ["text": "Test Prompt", "userId": "user2", "active": true])
+        let activePromptView = ActivePromptView(room: room, activePrompt: prompt)
+        return activePromptView
+    }
+}
+
 // MARK: View Model
 public class ActivePromptViewModel: ObservableObject {
     public let objectWillChange = PassthroughSubject<ActivePromptViewModel, Never>()
     var room: Room
     var activePrompt: Prompt
     var activePromptListener: ListenerRegistration?
+
+    var viewState: ViewState = .unknown { didSet {
+        objectWillChange.send(self)
+        os_log("action='set viewState' | viewState='%@'", "\(viewState)")
+    } }
     
     init(room: Room, activePrompt: Prompt) {
         self.room = room
@@ -111,22 +125,39 @@ public class ActivePromptViewModel: ObservableObject {
                 self.responseListener = responseService.listenForResponseChanges(roomId: self.room.id, promptId: self.activePrompt.id) { responses in
                     print("responses have changed: \(responses.map({$0.id}))")
                     self.responses = responses
-                    self.checkIfUserCanSubmitResponse()
-                    
-                    if self.allUsersHaveResponded() && self.allUsersHaveVoted() {
-                        promptService.setPromptInactive(roomId: self.room.id, promptId: self.activePrompt.id)
-                    }
+                    self.updateViewState()
                 }
             }
             // only check if prompt should be active after 1st user registration,
             // because for 1st registration the response listener will handle that
             // (avoids double call to method)
-            if self.userChangesCount > 1 && self.allUsersHaveResponded() && self.allUsersHaveVoted() {
-                promptService.setPromptInactive(roomId: self.room.id, promptId: self.activePrompt.id)
+            if self.userChangesCount > 1 {
+                self.updateViewState()
             }
         }
     }
     
+    func updateViewState() {
+        if activePrompt.userId == userService.getCurrentUserId() {
+            // user created the prompt
+            viewState = .standby
+            return
+        }
+        if !self.allUsersHaveResponded() {
+            if self.responses.first(where: { $0.userId == userService.getCurrentUserId() }) == nil {
+                viewState = .respond
+            } else {
+                viewState = .responding
+            }
+        } else if !allUsersHaveVoted() {
+            viewState = .vote
+        } else {
+            viewState = .completed
+            promptService.setPromptInactive(roomId: self.room.id, promptId: self.activePrompt.id)
+        }
+    }
+    
+    // TODO: move to a service (PromptService?)
     func allUsersHaveVoted() -> Bool {
         let uniqueUsers: Set = Set(self.users.map({ $0.id }))
         var uniqueVotes: Set = Set<String>()
@@ -147,26 +178,25 @@ public class ActivePromptViewModel: ObservableObject {
         return uniqueUsers == uniqueResponses
     }
     
-    func checkIfUserCanSubmitResponse() {
-        //TEMP (for testing)
-        self.canSubmitResponse = true
-        return
-        //END TEMP
-        
-        if (activePrompt.userId == userService.getCurrentUserId()) {
-            self.canSubmitResponse = false
-            return
-        }
-        responseService.userSubmittedResponse(roomId: room.id, promptId: activePrompt.id) { responseFound in
-            print("responseFound: \(responseFound)")
-            self.canSubmitResponse = !responseFound
-        }
-    }
-    
     func removeListener() {
         if let listener = self.responseListener {
             print("destroying response listener for active prompt in room")
             listener.remove()
         }
+        if let listener = self.userListener {
+            print("destroying user listener for active prompt in room")
+            listener.remove()
+        }
     }
+}
+
+// MARK: enums
+enum ViewState {
+    case standby // iff user created the prompt
+    case respond // user needs to respond
+    case responding // others need to respond
+    case vote // user needs to vote
+    case voting // others need to vote (NOTE: this state is not currently used)
+    case completed
+    case unknown // initial state
 }
